@@ -4,9 +4,9 @@
 	1: Navigate to the following website: https://louisstanbrook.shinyapps.io/sankey_app/
 
 	2: Run from the GitHub Repository, using the following code in RStudio:
-	install.packages(‘shiny’)
+	install.packages('shiny')
 	library(shiny)
-	shiny::runGitHub('L057278/Sankey_App’, ref = 'main')
+	shiny::runGitHub('L057278/Sankey_App', ref = 'main')
 
 	3: Run locally, downloaded from the GitHub Repository:
 	Navigate to the GitHub Repository: https://github.com/L057278/Sankey_App
