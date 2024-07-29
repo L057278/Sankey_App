@@ -39,8 +39,6 @@ sankey_gen <- function(html = FALSE){
     }
   }
   
-  
-  
   # nodedata
   paths <- data_sub$PATHNO_ENCODED %>% 
     unique() %>% 
@@ -124,12 +122,7 @@ sankey_gen <- function(html = FALSE){
         rename(ORIGIN = NODE_E_ENCODED)
     }
   }
-  
-  
-  
-  
-  
-  
+
   ## New code for processing the inputted data
   # Counts for each unique path2
   sankey_data <- data_sub %>%
@@ -170,12 +163,6 @@ sankey_gen <- function(html = FALSE){
   sankey_data <- sankey_data[order(sankey_data$PATHNO),]
   sankey_data_subset <- sankey_data
   
-  
-  
-  
-  
-  
-  
   data_sub <- data_sub %>%
     merge(., origins, by = 'USUBJID_ENCODED')
   
@@ -205,7 +192,6 @@ sankey_gen <- function(html = FALSE){
       links <- rbind(links, data_p)
     }
   }
-  
   
   links <- links[order(links$PATHNO_ENCODED, links$value),] 
   
@@ -366,7 +352,6 @@ sankey_gen <- function(html = FALSE){
     
   }
   
-  
   links <- links[order(links$PATHNO_ENCODED, links$value),] 
   if (isolate(input$order)){
     if (isolate(input$order_option == 'Name')){
@@ -392,53 +377,8 @@ sankey_gen <- function(html = FALSE){
     #append(brewer.pal(11, "PRGn")) %>%
     append(brewer.pal(6, "Set1")) %>%
     append(brewer.pal(11, "BrBG")) %>%
-    append(brewer.pal(11, "RdGy")) 
-  
-  
-  # if (!isolate(input$node_unique)){
-  #   for (x in nodedata_ord$name){
-  #     if (regexpr(isolate(input$color), x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("1")
-  #     }
-  #     else if (regexpr("(Disc. ?Study)|(Discontinued ?Study)", x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("3")
-  #     }
-  #     else if (regexpr("(No ?Trt.?)|(No ?Treatment)|(None)|(Other)|([Mm]issing)", x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("4")
-  #     }
-  #     else{
-  #       treatment <- treatment %>% append("2")
-  #     }
-  #   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # if (!isolate(input$node_unique)) {
-  #   for (x in nodedata_ord$name) {
-  #     if (regexpr(isolate(input$color), x, ignore.case = TRUE)[[1]][1] != -1) {
-  #       treatment <- treatment %>% append("1")
-  #     } else if (grepl("IDFS$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("1")
-  #     } else if (grepl("NMR$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("2")
-  #     } else if (grepl("MR$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("3")
-  #     } else if (grepl("(Death$|_D$)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("4")
-  #     } else if (grepl("(Disc. ?Study)|(Discontinued ?Study)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("3")
-  #     } else if (grepl("(No ?Trt.?)|(No ?Treatment)|(None)|(Other)|([Mm]issing)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("4")
-  #     } else {
-  #       treatment <- treatment %>% append(as.character(sample(1:4, 1)))
-  #     }
-  #   }
+    append(brewer.pal(11, "RdGy"))   
+
   if (!isolate(input$node_unique)) {
     # Create a dictionary to store assignments for names not hitting any condition
     name_assignments <- list()
@@ -466,18 +406,7 @@ sankey_gen <- function(html = FALSE){
         }
         treatment <- treatment %>% append(name_assignments[[x]])
       }
-    }
-  
-  
-  
-    
-    
-    
-    
-    
-    
-    
-    
+    }    
     
     nodedata_ord$group <- treatment
     
@@ -583,11 +512,6 @@ sankey_gen <- function(html = FALSE){
   
   links <- as.data.frame(links)
   
-  
-  
-  
-  
-  
   # Creates a variable for the unique path2 numbers from the data, then sorts it in ascending order 
   unique_path_no <- sankey_data_subset$PATHNO %>%
     unique() %>% 
@@ -631,11 +555,6 @@ sankey_gen <- function(html = FALSE){
   total_num_list <- total_num_list %>%
     append(length(total_nodes))
   
-  # Creates a variable for the length of our vec list
-  # total_nodes_no <- length(total_nodes)
-  
-  # unique_nodes_no <- length(unique(total_nodes))
-  
   # Creates a variable that creates unique ID for each node in our vec list.
   node_data <- data.frame(node = c(0:(length(total_nodes) - 1)), name = total_nodes, stringsAsFactors = FALSE) 
   
@@ -671,12 +590,6 @@ sankey_gen <- function(html = FALSE){
   
   # Orders the path_links variable we just created by the path2 number and probability
   path_links <- path_links[order(path_links$PATHNO, path_links$probability),] 
-  
-  
-  
-  
-  
-  
   
   # Creating a variable to add a 0 to the start of the number list
   total_no_list_2 <- c(0, total_num_list)
@@ -728,8 +641,6 @@ sankey_gen <- function(html = FALSE){
   # Adds new column for ID
   node_data_ord$node_ord <- (1:num_nodes - 1)
   
-  
-  
   node_probabilities <- sankey_data %>%
     select(source, target, probability, value, PATHNO) %>%
     arrange(PATHNO, source, target) %>%
@@ -765,20 +676,6 @@ sankey_gen <- function(html = FALSE){
   node_data_ord <- node_data_ord[order(node_data_ord$name, node_data_ord$node_ord), ]
   node_probabilities <- node_probabilities[order(node_probabilities$target, node_probabilities$PATHNO), ]
   
-  # node_data_ord2 <- node_data_ord %>%
-  #   mutate(target = node_probabilities$target,
-  #          probability = node_probabilities$total_probability,
-  #          value = node_probabilities$total_count,
-  #          PATHNO = node_probabilities$PATHNO,
-  #          group = case_when(
-  #            grepl("IDFS", name) & !grepl("^.*NMR|MR|Death", name) ~ 1,
-  #            grepl("NMR", name) & !grepl("^.*MR|Death", name) ~ 2,
-  #            grepl("MR", name) & !grepl("^.*Death", name) ~ 3,
-  #            grepl("Death", name) ~ 4,
-  #            TRUE ~ 4
-  #          )
-  #   )
-  
   node_data_ord2 <- node_data_ord %>%
     mutate(target = node_probabilities$target,
            probability = node_probabilities$total_probability,
@@ -799,51 +696,6 @@ sankey_gen <- function(html = FALSE){
   node_colours <- c()
   node_groups2 <- c()
   
-  # if (!isolate(input$node_unique)){
-  #   for (x in node_data_ord2$name){
-  #     if (regexpr(isolate(input$color), x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("1")
-  #     }
-  #     else if (regexpr("(Disc. ?Study)|(Discontinued ?Study)", x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("3")
-  #     }
-  #     else if (regexpr("(No ?Trt.?)|(No ?Treatment)|(None)|(Other)|([Mm]issing)", x, ignore.case = TRUE)[[1]][1] != -1){
-  #       treatment <- treatment %>% append("4")
-  #     }
-  #     else{
-  #       treatment <- treatment %>% append("2")
-  #     }
-  #   }
- 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # if (!isolate(input$node_unique)) {
-  #   for (x in nodedata_ord$name) {
-  #     if (regexpr(isolate(input$color), x, ignore.case = TRUE)[[1]][1] != -1) {
-  #       treatment <- treatment %>% append("1")
-  #     } else if (grepl("IDFS$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("1")
-  #     } else if (grepl("NMR$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("2")
-  #     } else if (grepl("MR$", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("3")
-  #     } else if (grepl("(Death$|_D$)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("4")
-  #     } else if (grepl("(Disc. ?Study)|(Discontinued ?Study)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("3")
-  #     } else if (grepl("(No ?Trt.?)|(No ?Treatment)|(None)|(Other)|([Mm]issing)", x, ignore.case = TRUE)) {
-  #       treatment <- treatment %>% append("4")
-  #     } else {
-  #       treatment <- treatment %>% append(as.character(sample(1:4, 1)))
-  #     }
-  #   }
   if (!isolate(input$node_unique)) {
     # Create a dictionary to store assignments for names not hitting any condition
     name_assignments <- list()
@@ -872,20 +724,6 @@ sankey_gen <- function(html = FALSE){
         treatment <- treatment %>% append(name_assignments[[x]])
       }
     }
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     node_data_ord2$group <- treatment
     
@@ -1015,7 +853,8 @@ sankey_gen <- function(html = FALSE){
   }
   
   
-  ## Show node sizes
+  ## disabled Show node sizes functionality, could be reworked for different purpose.
+  
   # if (isolate(input$node_show)){
   #   js_code <- js_code %>% 
   #     str_replace('units = 1', paste0("units = '", isolate(input$node_units), "'")) %>%
