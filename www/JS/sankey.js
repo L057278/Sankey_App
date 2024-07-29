@@ -383,17 +383,23 @@ Accessible from Side Menu -> General Styles -> Title
   
 /*--------------------------- Legend ---------------------------*/
 // Draws a node-color legend in the bottom right corner of the sankey plot
+// Accessible from: side menu -> nodes -> color group nodes -> add legend -> side menu -> graph styles
 
   
-  // Change this to activate legend
+  // Activates legend.
+  // Accessed from: sankey_function.R
+  // To find, look up: 'legend_bool = false' in sankey_function.R
   let legend_bool = false;
 
-  if (legend_bool){
 
+
+  if (legend_bool){
+    
     //Remove previous legend if it was turned on at least once before
     d3.select('#legend_here').remove()
     svg.append('g').attr('id', 'legend_here');
 
+    
     //Setting variables
     let legend = d3.select('#legend_here');
     let legend_size;
@@ -405,31 +411,36 @@ Accessible from Side Menu -> General Styles -> Title
     let unique_colors = [];
  
  
-    //Setting wanted x and y positions of the legend relative to the sankey diagram
+    //Setting wanted x and y positions of the legend relative to the sankey diagram dimensions(rect)
     legend_x=rect.width/1.5;
     legend_y=rect.height*1.05;
  
  
-    
     //Collect all node types and their colors to visualise later
     node.each(function(d,i) {
       unique_colors.push(d3.select(this).select('rect').style('fill'));
       unique_nodes.push(d3.select(this).select('text').text().split(':')[0].trim());
     });
- 
+
+
+    //create sets of unique nodes and colors
     unique_nodes = [...new Set(unique_nodes)];
     unique_colors = [...new Set(unique_colors)];
+
+    
     let larg_width = 0;
     let cur_width = 0;
     let distance = 0;
     let y = 0;
 
+    
     // Check if each node type has its own unique color
     if (unique_colors.length === unique_nodes.length){
       for (let x = 0; x < unique_nodes.length; x++){
 
         //Drawing color circles and node names on the legend:
         if (Math.floor(x/legend_nrow) === (y + 1)){
+          
           larg_width = larg_width + 50;
           distance = distance + larg_width;
           larg_width = 0;
@@ -466,20 +477,22 @@ Accessible from Side Menu -> General Styles -> Title
     let legend_title;
     legend.append('text')
       .attr('transform', 'translate(' + (legend_x + 16) +', '+ (legend_y - 19) +')')
-      .attr('font-size', '1.25vw')
+      .attr('font-size', '1.25vw')//set font size
       .attr('font-weight', 'bold')
       .text(legend_title)
 
+    
     // Measure the height of the legend 
     let legendBBox = legend.node().getBBox();
     let legendHeight = legendBBox.height;
 
-    // Get current bottom margin(free space below sankey plot)
+    
+    // Get current bottom margin(distance from the sankey plot to the next lowes element under it)
     let current_bottom_margin = parseInt(d3.select('#SankeyPlot').style('margin-bottom'))
 
+    
     // Increase the bottom margin to accomodate for the legend height so it does not intersect with the elements below
     d3.select('#SankeyPlot').style('margin-bottom', (legendHeight*1.4+textHeight/1.3) + 'px');
-
 
 
     /* Measure the height and width of the legend */
@@ -497,7 +510,7 @@ legend.insert('rect', ':first-child')
  
 console.log('legendHeight:', legendHeight);
  
-  } else {// remove all if we dont want legend, just in case
+  } else {// remove all legend if we dont want it, just in case
     d3.select('#legend_here').remove()
     svg.append('g').attr('id', 'legend_here');
   }
@@ -551,7 +564,7 @@ console.log('legendHeight:', legendHeight);
 
  
   /*--------------------------- Link Text button ---------------------------*/
-
+  
 
   let linkText = svg.append('g');
   let data = link.data();
