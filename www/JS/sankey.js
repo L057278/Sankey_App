@@ -98,7 +98,7 @@ If positions of the chunks above change, or new code chunks are added, please am
   if (missing){
 
     
-    node.each(function(){//from all nodes
+    node.each(function(){ 
       
       //select those with names beginning with 'Missing':
       if (d3.select(this).select('text').text().startsWith('Missing')){
@@ -109,7 +109,7 @@ If positions of the chunks above change, or new code chunks are added, please am
 
 
     
-    link.each(function(d){//from all nodes
+    link.each(function(d){ 
       
       //select those that have links to nodes beginning with 'Missing':
       if (d.target.name.startsWith('Missing')||d.source.name.startsWith('Missing')){
@@ -142,7 +142,7 @@ let chosenPercentage = 0;
 //Look up str_replace("chosenPercentage in sankey_function.R
 
   
-//From all nodes:
+ :
     node.each(function(){
 
   //Save the name of each node:
@@ -158,7 +158,7 @@ let chosenPercentage = 0;
 
 
 
-//From all nodes:
+ :
 link.each(function(d){
 
   //Extract percentages of the links, same way as above:
