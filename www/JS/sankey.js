@@ -33,6 +33,12 @@ If positions of the chunks above change, or new code chunks are added, please am
   // Set up height and width of the sankey plot
   d3.select('#SankeyPlot').style('height', '800px')
   d3.select('#SankeyPlot').style('width', '120%')
+  /* 
+      IMPORTANT: VALUES ABOVE MUST ALWAYS BE THE SAME AS VALUES IN
+      dashboard_tab.R, in  sankeyNetworkOutput("SankeyPlot", width = "120%", height = "800px").
+      IF YOU WANT TO AMEND HEIGHT AND WIDTH, ALSO CHANGE THEM IN dashboard_tab.R IN sankeyNetworkOutput.
+      OR YOU WILL GET A BUG WHERE AFTER EACH UPDATE PLOT BUTTON PRESS YOU GET A PLOT WITH DIFFERENT DIMENSIONS.
+  */
 
 
   
@@ -79,28 +85,43 @@ If positions of the chunks above change, or new code chunks are added, please am
 
   
   /*--------------------------- Remove Missing Values --------------------------- */
+  //Removes missing values from the diagram
+  //Accessible from Side menu -> Filters -> Remove Missing
+  
+  
+  // This switch is accessed by sankey_function.R
+  // Look up 'str_replace('missing = false', "missing = true")' in sankey_function.R to find
+  let missing = false; 
+
 
   
-  let missing = false;
   if (missing){
-    node.each(function(){
+
+    
+    node.each(function(){//from all nodes
+      
+      //select those with names beginning with 'Missing':
       if (d3.select(this).select('text').text().startsWith('Missing')){
-        d3.select(this).remove()
-      }
-    })
- 
-    link.each(function(d){
-      if (d.target.name.startsWith('Missing')||d.source.name.startsWith('Missing')){
-        d3.select(this).remove()
+        d3.select(this).remove()//and remove them from plot
       }
     })
 
- 
+
+    
+    link.each(function(d){//from all nodes
+      
+      //select those that have links to nodes beginning with 'Missing':
+      if (d.target.name.startsWith('Missing')||d.source.name.startsWith('Missing')){
+        d3.select(this).remove()//and remove them from plot
+      }
+    })
+
     
   }
+
+  
  
- 
- 
+  //TODO: find out if can remove this
   link = d3.selectAll('.link');
   node = d3.selectAll('.node');
  
@@ -108,30 +129,47 @@ If positions of the chunks above change, or new code chunks are added, please am
 
 
   
- /*--------------------------- Remove nodes and liks by percentage ---------------------------*/
+/*--------------------------- Remove nodes and liks by percentage ---------------------------*/
+//Removes nodes that have values less than chosen percentage, and their corresponding links
+//Accessible from Side Menu -> Filters -> Treatment Percentage
 
-  
-let chosenPercentage = 0;// Set your chosen percentage here
- 
-    
+
+//Removes all nodes with values less than this:
+let chosenPercentage = 0;
+
+
+//From all nodes:
     node.each(function(){
+
+  //Save the name of each node:
   let nodeName = d3.select(this).select('text').text();
+  //Use regex to extract the percentage from node's names:
   let percentage = nodeName.match(/\((\d+)%\)/);
+  //Remove nodes that have less % than specified above:
   if (percentage && parseInt(percentage[1]) <= chosenPercentage){
     d3.select(this).remove()
   }
 })
- 
+
+
+
+//From all nodes:
 link.each(function(d){
+
+  //Extract percentages of the links, same way as above:
   let sourcePercentage = d.source.name.match(/\((\d+)%\)/);
   let targetPercentage = d.target.name.match(/\((\d+)%\)/);
+  //Remove links(I think?) corresponding to this node:
   if ((sourcePercentage && parseInt(sourcePercentage[1]) <= chosenPercentage) || 
       (targetPercentage && parseInt(targetPercentage[1]) <= chosenPercentage)){
     d3.select(this).remove()
   }
 })
- 
- 
+
+
+
+  
+ //TODO: Find out if this can be removed
   link = d3.selectAll('.link');
   node = d3.selectAll('.node');
 
@@ -140,7 +178,7 @@ link.each(function(d){
 
  
   /*--------------------------- Timepoints on Graph ---------------------------*/
-
+  
   
   let timex = [];
   let xcoord;
