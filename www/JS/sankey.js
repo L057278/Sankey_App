@@ -24,7 +24,11 @@ If positions of the chunks above change, or new code chunks are added, please am
 
 
 
+
+
 (el, x) => {
+
+
   
   // Set up height and width of the sankey plot
   d3.select('#SankeyPlot').style('height', '800px')
@@ -66,13 +70,16 @@ If positions of the chunks above change, or new code chunks are added, please am
 
 
 
-  //Now can refer to objects below just by link and node. Saves time and space.
+  //Now can refer to objects below just by 'link' and 'node'. Saves time and space.
   let link = d3.selectAll('.link');
   let node = d3.selectAll('.node');
  
 
+
+
   
   /*--------------------------- Remove Missing Values --------------------------- */
+
   
   let missing = false;
   if (missing){
@@ -99,9 +106,11 @@ If positions of the chunks above change, or new code chunks are added, please am
  
  
 
- 
+
+  
  /*--------------------------- Remove nodes and liks by percentage ---------------------------*/
- 
+
+  
 let chosenPercentage = 0;// Set your chosen percentage here
  
     
@@ -131,6 +140,8 @@ link.each(function(d){
 
  
   /*--------------------------- Timepoints on Graph ---------------------------*/
+
+  
   let timex = [];
   let xcoord;
   node.each(function(d,i) {
@@ -164,6 +175,7 @@ link.each(function(d){
  
 /*--------------------------- Title ---------------------------*/
 
+  
   let textHeight=0;
     //SOMETHING AVERAGE, NO IDEA WHAT, DONT DELETE BECAUSE IT CRASHES
     const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
@@ -226,8 +238,11 @@ link.each(function(d){
 
 
 
- 
+
+  
   /*--------------------------- Footnote ---------------------------*/
+
+  
   let footnote = 1;
   if (footnote !== 1){
 
@@ -258,17 +273,14 @@ link.each(function(d){
     //Change the svg window height to avoid title cut-off
     d3.select('#SankeyPlot').style('margin-bottom', (current_bottom_margin + text_footnote_Height + 30) + 'px');
   }
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
   
 /*--------------------------- Legend ---------------------------*/
 
+  
   // Change this to activate legend
   let legend_bool = false;
 
@@ -391,6 +403,8 @@ console.log('legendHeight:', legendHeight);
 
   
   /*--------------------------- Tooltip ---------------------------*/
+
+  
   d3.selectAll('title').remove();
   
   let tip1 = d3.tip()
@@ -433,6 +447,8 @@ console.log('legendHeight:', legendHeight);
 
  
   /*--------------------------- Link Text button ---------------------------*/
+
+
   let linkText = svg.append('g');
   let data = link.data();
   let linkLength = data.length;
@@ -473,9 +489,11 @@ console.log('legendHeight:', legendHeight);
 
 
 
- 
+
+  
   /*--------------------------- Node Labels Hide ---------------------------*/
 
+  
   let nodeHide = false;
   if (nodeHide){
     node
@@ -540,8 +558,12 @@ console.log('legendHeight:', legendHeight);
     })
 
 
- 
+
+
+  
     /*--------------------------- PowerBI click action ---------------------------*/
+
+  
     node
       .select('rect')
       .style("cursor", "pointer");
@@ -621,8 +643,11 @@ console.log('legendHeight:', legendHeight);
 
 
 
- 
+
+  
     /*--------------------------- Manual Input Node/Link Colours ---------------------------*/
+
+  
     let manual_colors;
     if (manual_colors){
       node
@@ -702,15 +727,14 @@ console.log('legendHeight:', legendHeight);
             .style('fill', circle_fill2);
         })
     }
-    
-    
-    
-    //g
-    //h
 
 
-    
+
+
+  
     /*--------------------------- Set up date and download ---------------------------*/
+
+  
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -723,5 +747,15 @@ console.log('legendHeight:', legendHeight);
                    .attr('href', 'data:application/octet-stream;base64,' + btoa(d3.select('#SankeyPlot').html()))
                    .attr('download', 'sankey-svg-network-' + today + '.svg')
              });
+
+
+
+
+  
  }
- 
+
+
+
+
+
+
