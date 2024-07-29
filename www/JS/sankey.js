@@ -1,6 +1,28 @@
+/* sankey.js
 
+This file is responsible for positioning and editing of the sankey diagram and dashboard page overall.
+
+Contents:
+
+1. Remove Missing Values: line 
+2. Remove nodes and links by percentage: line
+3. Timepoints on graph: line
+4. Title: line 
+5. Footnote: line
+6. Legend: line
+7. Tooltip: line 
+8. Link Text button: line
+9. Node Labels Hide: line
+10. PowerBI click action: line
+11. Manual Input Node/Link Colours: line
+12. Set up date and download: line
+
+
+*/
 (el, x) => {
- /* */
+  
+  
+  
   d3.select('#SankeyPlot').style('height', '800px')
   d3.select('#SankeyPlot').style('width', '120%')
   d3.select('svg').style('width', '100%').style('height', '1500px');
@@ -49,6 +71,9 @@
   node = d3.selectAll('.node');
  
  
+
+ 
+ //Remove nodes and liks by percentage
  
 let chosenPercentage = 0;// Set your chosen percentage here
  
@@ -74,6 +99,10 @@ link.each(function(d){
   link = d3.selectAll('.link');
   node = d3.selectAll('.node');
 
+
+
+
+ 
   /* Timepoints on Graph */
   let timex = [];
   let xcoord;
@@ -102,6 +131,10 @@ link.each(function(d){
     }
   }
 
+
+
+
+ 
 /* Title */
 
   let textHeight=0;
@@ -164,6 +197,9 @@ link.each(function(d){
     
   }
 
+
+
+ 
   /* Footnote */
   let footnote = 1;
   if (footnote !== 1){
@@ -195,13 +231,6 @@ link.each(function(d){
     //Change the svg window height to avoid title cut-off
     d3.select('#SankeyPlot').style('margin-bottom', (current_bottom_margin + text_footnote_Height + 30) + 'px');
   }
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -389,6 +418,9 @@ console.log('legendHeight:', legendHeight);
   link.style('stroke-opacity', 0.901);
   
 
+
+
+ 
   /* Link Text button */
   let linkText = svg.append('g');
   let data = link.data();
@@ -428,6 +460,9 @@ console.log('legendHeight:', legendHeight);
       }
     })
 
+
+
+ 
   /* Node Labels Hide */
 
   let nodeHide = false;
@@ -493,6 +528,8 @@ console.log('legendHeight:', legendHeight);
       
     })
 
+
+ 
     /* PowerBI click action */
     node
       .select('rect')
@@ -571,6 +608,9 @@ console.log('legendHeight:', legendHeight);
         })
     }
 
+
+
+ 
     /* Manual Input Node/Link Colours */
     let manual_colors;
     if (manual_colors){
@@ -659,7 +699,7 @@ console.log('legendHeight:', legendHeight);
 
 
     
-    
+    // Set up date and download
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
