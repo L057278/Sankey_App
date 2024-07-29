@@ -1,6 +1,6 @@
 
 (el, x) => {
- 
+ /* */
   d3.select('#SankeyPlot').style('height', '800px')
   d3.select('#SankeyPlot').style('width', '120%')
   d3.select('svg').style('width', '100%').style('height', '1500px');
