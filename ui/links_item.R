@@ -27,9 +27,6 @@ menuItem("Links", icon = icon("th-list", lib='glyphicon'), tabName = "links",
          bsTooltip(id = "size_label_l",
                 title = 'Show link sizes in the link labels.'
                 ),
-
-         
-
          
          div(id='add_slider_here'),
 
