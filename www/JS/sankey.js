@@ -18,35 +18,62 @@ Contents:
 12. Set up date and download: line
 
 
+If positions of the chunks above change, or new code chunks are added, please amend the list above as well.
+
 */
+
+
+
 (el, x) => {
   
-  
-  
+  // Set up height and width of the sankey plot
   d3.select('#SankeyPlot').style('height', '800px')
   d3.select('#SankeyPlot').style('width', '120%')
+
+
+  
+  /*
+  Set up height and width of the visibility window. 
+  It is necessary so title, or diagram, or footnote or legend are not 'cut-off' by visibility window when sizes change.
+  Height is set to 1500 because it allows us plenty of space to go down or up with no disadvantages.
+  Width is set to 100% to take all available webpage width.
+  */
   d3.select('svg').style('width', '100%').style('height', '1500px');
   let svg = d3.select('svg');
- 
+
+
+  
   let margin_top;
   let margin_bottom;
   let margin_right;
   let margin_left;
- 
+
+
+  
+  //Set up initial margins. The margins below look good for diagrams without extra features.
+  //They can be changed later.
   d3.select('#SankeyPlot').style('margin-top', '50px')
   d3.select('#SankeyPlot').style('margin-bottom', '0px')
   d3.select('#SankeyPlot').style('margin-left', '0px')
   d3.select('#SankeyPlot').style('margin-right', '0px')
+
+
   
+  //Delete old legend, append new one.
+  //This is so when we change legend properties, only the legend with the latest properties appears.
   d3.select('#legend_here').remove()
   svg.append('g').attr('id', 'legend_here');
- 
+
+
+
+  //Now can refer to objects below just by link and node. Saves time and space.
   let link = d3.selectAll('.link');
   let node = d3.selectAll('.node');
  
+
   
- 
-  /* Remove Missing Values */
+  /*--------------------------- Remove Missing Values --------------------------- */
+  
   let missing = false;
   if (missing){
     node.each(function(){
@@ -73,7 +100,7 @@ Contents:
  
 
  
- //Remove nodes and liks by percentage
+ /*--------------------------- Remove nodes and liks by percentage ---------------------------*/
  
 let chosenPercentage = 0;// Set your chosen percentage here
  
@@ -103,7 +130,7 @@ link.each(function(d){
 
 
  
-  /* Timepoints on Graph */
+  /*--------------------------- Timepoints on Graph ---------------------------*/
   let timex = [];
   let xcoord;
   node.each(function(d,i) {
@@ -135,7 +162,7 @@ link.each(function(d){
 
 
  
-/* Title */
+/*--------------------------- Title ---------------------------*/
 
   let textHeight=0;
     //SOMETHING AVERAGE, NO IDEA WHAT, DONT DELETE BECAUSE IT CRASHES
@@ -200,7 +227,7 @@ link.each(function(d){
 
 
  
-  /* Footnote */
+  /*--------------------------- Footnote ---------------------------*/
   let footnote = 1;
   if (footnote !== 1){
 
@@ -240,7 +267,7 @@ link.each(function(d){
   
   
   
-/* Legend */
+/*--------------------------- Legend ---------------------------*/
 
   // Change this to activate legend
   let legend_bool = false;
@@ -362,24 +389,8 @@ console.log('legendHeight:', legendHeight);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /* Tooltip */
+  
+  /*--------------------------- Tooltip ---------------------------*/
   d3.selectAll('title').remove();
   
   let tip1 = d3.tip()
@@ -421,7 +432,7 @@ console.log('legendHeight:', legendHeight);
 
 
  
-  /* Link Text button */
+  /*--------------------------- Link Text button ---------------------------*/
   let linkText = svg.append('g');
   let data = link.data();
   let linkLength = data.length;
@@ -463,7 +474,7 @@ console.log('legendHeight:', legendHeight);
 
 
  
-  /* Node Labels Hide */
+  /*--------------------------- Node Labels Hide ---------------------------*/
 
   let nodeHide = false;
   if (nodeHide){
@@ -530,7 +541,7 @@ console.log('legendHeight:', legendHeight);
 
 
  
-    /* PowerBI click action */
+    /*--------------------------- PowerBI click action ---------------------------*/
     node
       .select('rect')
       .style("cursor", "pointer");
@@ -611,7 +622,7 @@ console.log('legendHeight:', legendHeight);
 
 
  
-    /* Manual Input Node/Link Colours */
+    /*--------------------------- Manual Input Node/Link Colours ---------------------------*/
     let manual_colors;
     if (manual_colors){
       node
@@ -699,7 +710,7 @@ console.log('legendHeight:', legendHeight);
 
 
     
-    // Set up date and download
+    /*--------------------------- Set up date and download ---------------------------*/
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
