@@ -3,12 +3,7 @@ tabItem(tabName = "dashboard",
                        column(6,tags$button(tags$span(h3("Number of Subjects", align="right"),
                                                       h2(htmlOutput("no_of_patients"), align="center"), style = "color:red"),
                                             type="button", style = "float:right",width="50%"))),
-              sankeyNetworkOutput("SankeyPlot", width = "120%", height = "800px")%>% withSpinner(color="#0dc5c1"),
-              #sankeyNetworkOutput("SankeyPlot", width = "90%", height = "700px")%>% withSpinner(color="#0dc5c1"),
-              #sankeyNetworkOutput("SankeyPlot", width = "100%", height = "600px")%>% withSpinner(color="#0dc5c1"),
-              #sankeyNetworkOutput("SankeyPlot", width = "100%", height = "700px")%>% withSpinner(color="#0dc5c1"),
-              #sankeyNetworkOutput("SankeyPlot", width = "90%", height = "700px")%>% withSpinner(color="#0dc5c1")
-        
+              sankeyNetworkOutput("SankeyPlot", width = "120%", height = "800px")%>% withSpinner(color="#0dc5c1"),      
         
               br(),
               br(),
