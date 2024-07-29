@@ -44,7 +44,9 @@ menuItem("Nodes", icon = icon("th-list", lib='glyphicon'), tabName = "nodes",
                bsTooltip(id = "node_unique_label",
                 title = 'Colour each unique node differently.'
                 ),
-               
+
+         # Disabled 'show node sizes' because they are now on by default. could be reworked for other functionality.
+         
                # materialSwitch('node_show',
                #                label = tags$span(id = "size_label", "Show Node sizes"),
                #                status = 'primary',
