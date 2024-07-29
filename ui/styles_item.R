@@ -51,6 +51,8 @@ menuItem("Graph Styles", icon = icon("th-list", lib='glyphicon'), tabName = "gra
     div(id = 'legend_style_here'),
     hr()
 
+# Timepoint style functionality. The code is there in server.R, but no way to open it up in graph styles.
+         
     # h5('Timepoints'),
     # div(id = 'timepoint_style_here'),
     # 
