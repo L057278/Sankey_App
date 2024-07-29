@@ -90,7 +90,7 @@ If positions of the chunks above change, or new code chunks are added, please am
   
   
   // This switch is accessed by sankey_function.R
-  // Look up 'str_replace('missing = false', "missing = true")' in sankey_function.R to find
+  // Look up str_replace('missing = false', "missing = true") in sankey_function.R to find
   let missing = false; 
 
 
@@ -102,6 +102,7 @@ If positions of the chunks above change, or new code chunks are added, please am
       
       //select those with names beginning with 'Missing':
       if (d3.select(this).select('text').text().startsWith('Missing')){
+        
         d3.select(this).remove()//and remove them from plot
       }
     })
@@ -112,6 +113,7 @@ If positions of the chunks above change, or new code chunks are added, please am
       
       //select those that have links to nodes beginning with 'Missing':
       if (d.target.name.startsWith('Missing')||d.source.name.startsWith('Missing')){
+        
         d3.select(this).remove()//and remove them from plot
       }
     })
@@ -136,8 +138,10 @@ If positions of the chunks above change, or new code chunks are added, please am
 
 //Removes all nodes with values less than this:
 let chosenPercentage = 0;
+//It is accessible from sankey_function.R
+//Look up str_replace("chosenPercentage in sankey_function.R
 
-
+  
 //From all nodes:
     node.each(function(){
 
@@ -147,6 +151,7 @@ let chosenPercentage = 0;
   let percentage = nodeName.match(/\((\d+)%\)/);
   //Remove nodes that have less % than specified above:
   if (percentage && parseInt(percentage[1]) <= chosenPercentage){
+    
     d3.select(this).remove()
   }
 })
@@ -162,6 +167,7 @@ link.each(function(d){
   //Remove links(I think?) corresponding to this node:
   if ((sourcePercentage && parseInt(sourcePercentage[1]) <= chosenPercentage) || 
       (targetPercentage && parseInt(targetPercentage[1]) <= chosenPercentage)){
+    
     d3.select(this).remove()
   }
 })
@@ -178,7 +184,9 @@ link.each(function(d){
 
  
   /*--------------------------- Timepoints on Graph ---------------------------*/
-  
+  //Supposed to move timepoints on graph?
+  //As of 29/07/2024, inoperable.
+
   
   let timex = [];
   let xcoord;
@@ -212,39 +220,67 @@ link.each(function(d){
 
  
 /*--------------------------- Title ---------------------------*/
+/*
+Adds a title on top of the plot. 
+Title adjusts window size, top and bottom margins, centres coordinates automatically.
+
+Accessible from Side Menu -> General Styles -> Title
+*/  
+
+  //Placeholder variable. It holds the height of the title. It will be used to adjust bottom margin later.
+  let textHeight=0;
+
 
   
-  let textHeight=0;
     //SOMETHING AVERAGE, NO IDEA WHAT, DONT DELETE BECAUSE IT CRASHES
     const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
     let average_x = average(timex);
 
-    //ACTUAL TITLE PART
+
+  
+    //------ACTUAL TITLE PART---------
     //Get dimensions of sankey plot (height, width etc so we can alignt title to it):
     let rect=d3.select('#SankeyPlot').node().getBoundingClientRect();
 
-    //Take Sankey Plot's dimensions we need from rect:
+    //Take Sankey Plot's dimensions we need from rect, and take bout half of it, so the title is roughly in the centre:
     let center_x = rect.width/2.7;
+    //Y coordinate of title is taken approximately:
     let top_y = -1*20;
 
 
+
+    //TODO: find out if this can be removed. SVG height should in proficit by default. 
+    //No adnjustments should be needed.
     let currentSvgHeight = parseInt(d3.select('svg').style('height'));
-    //Increase the height of the SVG to add extra space at the bottom
     d3.select('svg').style('height', (currentSvgHeight + 0) + 'px');
- 
+
+
     
+    /*
+    IMPORTANT: THIS PART ATTACHES SANKEY PLOT TO THE TOP OF THE WINDOW.
+    WITHOUT THIS PART, AS WINDOW HEIGHT AND AVAILABLE VERTICAL SPACE
+    INCREASES, SANKEY PLOT GOES DOWN. 
+    WITH THESE LINES, PLOT STAYS ON TOP:
+    */
     d3.select('svg')
     .attr('viewBox', '0 0 ' + rect.width + ' ' + (currentSvgHeight + 0));
 
-    //Title switch depending on switch in general styles tab:
+
+    
+    //Title off/on switch depending on switch in general styles tab:
     let title = 1;
+   //Accessible from sankey_function.R:
+   //Look up str_replace('title = 1' in sankey_function.R
+
+  
     if (title !== 1){
+      
     //Set in general styles tab:
     let title_font;
     let title_size;
     let title_x;
- 
-    
+
+      
     //Create the title with data above:
     let textElement = svg.select('g')
     .append('text')
@@ -253,23 +289,29 @@ link.each(function(d){
     .attr('font-family', title_font)
     .text(title)
 
+      
     // Take text window dimensions to alignt it with sankey automatically:
     let bbox = textElement.node().getBBox();
     // Calculate x position of title:
     let text_X = -1*bbox.width/2+center_x+2.5*title_x;
-    //Text height so we can increase window height to avoid cut-off
+    //Calculate text height so we can increase window height to avoid cut-off later in the code:
     let textHeight = 1.5*bbox.height+20;
 
-    //Move the title based on the data above
+    
+    //Move the title based on the x and y positions data above
     textElement.attr('transform', 'translate(' + text_X +',  ' + top_y + ')')
 
+
+    //TODO: THIS SVG PART IS PROBABLY UNNECESSARY, AS SVG IS SET UP TO 1500 PX ABOVE. CAN REMOVE IT?
     //Extract the current svg window height
     let currentSvgHeight = parseInt(d3.select('svg').style('height'));
-    //Change the svg window height to avoid title cut-off
     d3.select('svg').style('height', (currentSvgHeight + textHeight) + 'px');
 
+
+    //Change bottom margin by adding 'textHeight' to the already existing bottom margin:
+    //Get current bottom margin
     let current_bottom_margin = parseInt(d3.select('#SankeyPlot').style('margin-bottom'));
-    //Change the svg window height to avoid title cut-off
+    //Increase current bottom margin
     d3.select('#SankeyPlot').style('margin-bottom', (current_bottom_margin + textHeight/1.5) + 'px');
     
   }
@@ -279,36 +321,59 @@ link.each(function(d){
 
   
   /*--------------------------- Footnote ---------------------------*/
+ /*
+ Adds a Footnote on the bottom of the plot. 
+ Footnote automatically adjusts window size, bottom margin.
+
+ Accessible from Side Menu -> General Styles -> Footnote
+ */  
+
+  //Footnote switch off/on depending on switch in general styles tab:
+  let footnote = 1;
+  /*
+  Accessible from sankey_function.R: 
+  look up str_replace('footnote = 1' in sankey_function.R
+  */
+
 
   
-  let footnote = 1;
   if (footnote !== 1){
 
+    //get sankey plot dimensions
     let rect=d3.select('#SankeyPlot').node().getBoundingClientRect();
 
 
+    //This is adjusted from the sankey_function.R
     let footnote_font;
     let footnote_size;
  
- 
+
+    //Create the footnote with the data above
     let textElement_footnote= svg.append('g')
       .append('text')
       .attr('font-size', footnote_size+'vw')
       .attr('font-family', footnote_font)
       .text(footnote)
+
+
+    //Get the dimensons of the footnote
     let bbox_footnote = textElement_footnote.node().getBBox();
     let text_footnote_Height = bbox_footnote.height/2;
 
-        // Calculate x position of title:
+    
+    // Calculate x position of footnote(want it to be near left bottom corner):
     let text_footnote_X = 15;//-1*bbox_footnote.width/2;
-    //Text height so we can increase window height to avoid cut-off
+    //Y coordinate of footnote: height of sankey graph+ height of the footnote itself.
     let text_footnote_y = text_footnote_Height+ rect.height;
 
+    
     //Move the title based on the data above
     textElement_footnote.attr('transform', 'translate(' + text_footnote_X +',  ' + text_footnote_y + ')')
 
+
+    //Get current bottom margin
     let current_bottom_margin = parseInt(d3.select('#SankeyPlot').style('margin-bottom'));
-    //Change the svg window height to avoid title cut-off
+    //Increase current bottom margin to accomodate for the footnote based on the footnote's size:
     d3.select('#SankeyPlot').style('margin-bottom', (current_bottom_margin + text_footnote_Height + 30) + 'px');
   }
 
@@ -317,6 +382,7 @@ link.each(function(d){
 
   
 /*--------------------------- Legend ---------------------------*/
+// Draws a node-color legend in the bottom right corner of the sankey plot
 
   
   // Change this to activate legend
