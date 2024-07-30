@@ -91,7 +91,7 @@ If positions of the chunks above change, or new code chunks are added, please am
   
   
   // This switch is accessed by sankey_function.R
-  // Look up 'str_replace('missing = false', "missing = true")' in sankey_function.R to find
+  // Look up str_replace('mi in sankey_function.R to find
   let missing = false; 
 
 
@@ -145,7 +145,7 @@ If positions of the chunks above change, or new code chunks are added, please am
 //Removes all nodes with values less than this:
 let chosenPercentage = 0;
 //It is accessible from sankey_function.R
-//Look up str_replace("chosenPercentage in sankey_function.R
+//Look up str_replace("chosenP in sankey_function.R
 
 
 // look through all nodes:
@@ -231,6 +231,7 @@ link.each(function(d){
 
 
 
+
 /*--------------------------- Title ---------------------------*/
 /*
 Adds a title on top of the plot. 
@@ -282,7 +283,7 @@ Accessible from Side Menu -> General Styles -> Title
     //Title off/on switch depending on switch in general styles tab:
     let title = 1;
    //Accessible from sankey_function.R:
-   //Look up str_replace('title = 1' in sankey_function.R
+   //Look up str_replace('title in sankey_function.R
 
   
     if (title !== 1){
@@ -344,7 +345,7 @@ Accessible from Side Menu -> General Styles -> Title
   let footnote = 1;
   /*
   Accessible from sankey_function.R: 
-  look up str_replace('footnote = 1' in sankey_function.R
+  look up str_replace('footnote in sankey_function.R
   */
 
 
@@ -400,19 +401,19 @@ Accessible from Side Menu -> General Styles -> Title
 
 
   
+
 /*--------------------------- Legend ---------------------------*/
 // Draws a node-color legend in the bottom right corner of the sankey plot
 // Accessible from: side menu -> nodes -> color group nodes -> add legend -> side menu -> graph styles
-  
-  
+
   
   // Activates legend.
   // Accessed from: sankey_function.R
-  // To find, look up: 'legend_bool = false' in sankey_function.R
+  // To find, look up: legend_ in sankey_function.R
   let legend_bool = false;
 
 
-  
+
   if (legend_bool){
 
     //Remove previous legend if it was turned on at least once before
@@ -433,12 +434,11 @@ Accessible from Side Menu -> General Styles -> Title
  
  
  
-      //Setting wanted x and y positions of the legend relative to the sankey diagram dimensions(rect)
+    //Setting wanted x and y positions of the legend relative to the sankey diagram
     legend_x=rect.width/1.5;
     legend_y=rect.height*1.05;
  
  
-    
     //Collect all node types and their colors to visualise later
     node.each(function(d,i) {
       unique_colors.push(d3.select(this).select('rect').style('fill'));
@@ -454,8 +454,11 @@ Accessible from Side Menu -> General Styles -> Title
     let distance = 0;
     let y = 0;
 
+
+
     // Check if each node type has its own unique color
     if (unique_colors.length === unique_nodes.length){
+      
       for (let x = 0; x < unique_nodes.length; x++){
 
         //Drawing color circles and node names on the legend:
@@ -464,10 +467,7 @@ Accessible from Side Menu -> General Styles -> Title
           distance = distance + larg_width;
           larg_width = 0;
         }
-        
-        
         y = Math.floor(x/legend_nrow);
-        
         legend.append("circle")
           .attr("cx",legend_x + distance)
           .attr("cy",legend_y + 30*(x-legend_nrow*y))
@@ -482,7 +482,6 @@ Accessible from Side Menu -> General Styles -> Title
           .style("font-family", legend_font)
           .attr("alignment-baseline","middle")
           .attr('class', 'legend_labels')
- 
  
         cur_width = legend
           .selectAll('.legend_labels')
@@ -503,16 +502,13 @@ Accessible from Side Menu -> General Styles -> Title
       .attr('font-size', '1.25vw')
       .attr('font-weight', 'bold')
       .text(legend_title)
-      
-      
+
+
 
     // Measure the height of the legend 
     let legendBBox = legend.node().getBBox();
     let legendHeight = legendBBox.height;
-
-
-
-    // Get current bottom margin(distance from the sankey plot to the next lowes element under it)
+    // Get current bottom margin(free space below sankey plot)
     let current_bottom_margin = parseInt(d3.select('#SankeyPlot').style('margin-bottom'))
 
 
@@ -525,7 +521,6 @@ Accessible from Side Menu -> General Styles -> Title
     /* Measure the height and width of the legend */
 let legendWidth = legendBBox.width;
  
- 
 /* Append a rectangle behind the legend to contain it */
 legend.insert('rect', ':first-child')
   .attr('x', legendBBox.x - 10)  // Add padding
@@ -536,21 +531,26 @@ legend.insert('rect', ':first-child')
   .style('stroke', 'black')  // Border color
   .style('stroke-width', 1);  // Border width
  
- 
 console.log('legendHeight:', legendHeight);
  
- 
-  } else {
+  } else {// remove legend traces
     d3.select('#legend_here').remove()
     svg.append('g').attr('id', 'legend_here');
   }
-  // remove legend traces
-
-
-  /*--------------------------- Tooltip ---------------------------*/
 
   
+  
+  
+  
+  
+  /*--------------------------- Tooltip ---------------------------*/
+  
+  
+  
+  
   d3.selectAll('title').remove();
+  
+  
   
   let tip1 = d3.tip()
     .attr('class', 'd3-tip')
@@ -565,6 +565,8 @@ console.log('legendHeight:', legendHeight);
     .html(d => {
       return d.source.name + ' -> ' + d.target.name + '<br><strong>' + d.value + '</strong> people in this path,' + '<br>which started from ' + d.ORIGIN;
     });
+  
+  
     
   let tip2 = d3.tip()
     .attr('class', 'd3-tip')
@@ -579,12 +581,12 @@ console.log('legendHeight:', legendHeight);
     .html(d => {
       return d.name + '<br><strong>' + d.value + '</strong> people in this node!';
     });
+  
+    
     
   svg.call(tip1);
-    
   svg.call(tip2);
 
-  
   link.style('stroke-opacity', 0.901);
   
 
@@ -594,20 +596,24 @@ console.log('legendHeight:', legendHeight);
   /*--------------------------- Link Text button ---------------------------*/
 
 
+
+
   let linkText = svg.append('g');
   let data = link.data();
   let linkLength = data.length;
-
-  
-  
   let linkShow = false;
   let clicks = 0;
+  
+  
+  
   d3.select('label[for=\"link_show\"]')
     .on('click', d => {
       linkShow = !linkShow;
       clicks = clicks + 1;
       if (clicks == 1){
+        
         for (let x = 0; x < linkLength; x++){
+          
           let d = data[x];
           linkText
             .append('text')
@@ -623,10 +629,13 @@ console.log('legendHeight:', legendHeight);
             .attr('opacity', 0);
         } 
       }
+      
       if (linkShow){
+        
         d3.selectAll('.linkText')
           .attr('opacity', 1)
       } else {
+        
         d3.selectAll('.linkText')
           .attr('opacity', 0)
       }
@@ -637,7 +646,9 @@ console.log('legendHeight:', legendHeight);
 
   
   /*--------------------------- Node Labels Hide ---------------------------*/
-
+  //Hides all the text from the nodes.
+  
+  
   
   let nodeHide = false;
   if (nodeHide){
