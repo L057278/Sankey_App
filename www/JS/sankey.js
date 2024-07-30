@@ -30,15 +30,15 @@ If positions of the chunks above change, or new code chunks are added, please am
 IMPORTANT NOTICE ABOUT BUGS-------------IMPORTANT NOTICE ABOUT BUGS------------IMPORTANT NOTICE ABOUT BUGS
 
 
-FOR SOME REASON, JAVASCRIPT CAN'T COMPILE COMMENTS THAT DON'T HAVE SPACE AFTER // OR /*. IT OFTEN CRASHES
-THE WHOLE THING AND RETURNS A CONSOLE ERROR OF THE KIND: SyntaxError: Unexpected identifier 'the'. INSTEAD
-OF 'the', THERE COULD BE ANY WORD IN THE COMMENT YOU WROTE. TO AVOID THIS, ALWAYS PUT A SPACE AFTER // AND
-/*.
 
-IF YOU HAVE MANY INSTANCES, YOU CAN USE CTRL+F 'ALL' REPLACEMENT: FIND '//' AND REPLACE WITH '// '. 
-SAME FOR /*. 
+Ensure a space after // or /* to prevent compilation errors of the kind:
+SyntaxError: Unexpected identifier 'the'. 
+There  can be any word from the comment instead of 'the'.
 
-TO ACCESS CONSOLE, PRESS CTRL+SHIFT+C IN THE BROWSER WINDOW, THEN GO TO THE TAB RIGHT OF 'ELEMENTS'.
+To replace many instances of the bug, you can use ctrl+F -> 'all' replacement -> find '//', replace with '// '.
+
+Console can be accessed with ctrl+shift+c. Please use it if webpage contains errors.
+
 
 
 IMPORTANT NOTICE ABOUT BUGS-------------IMPORTANT NOTICE ABOUT BUGS------------IMPORTANT NOTICE ABOUT BUGS
