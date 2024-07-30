@@ -39,7 +39,7 @@ If positions of the chunks above change, or new code chunks are added, please am
       IMPORTANT: VALUES ABOVE MUST ALWAYS BE THE SAME AS VALUES IN
       dashboard_tab.R, in  sankeyNetworkOutput("SankeyPlot", width = "120%", height = "800px").
       IF YOU WANT TO AMEND HEIGHT AND WIDTH, ALSO CHANGE THEM IN dashboard_tab.R IN sankeyNetworkOutput.
-      OR YOU WILL GET A BUG WHERE AFTER EACH UPDATE PLOT BUTTON PRESS YOU GET A PLOT WITH DIFFERENT DIMENSIONS.
+      OR YOU WILL GET the BUG WHERE AFTER EACH UPDATE PLOT BUTTON PRESS YOU GET PLOT WITH DIFFERENT DIMENSIONS.
   */
 
 
@@ -234,7 +234,7 @@ link.each(function(d){
 
 /*--------------------------- Title ---------------------------*/
 /*
-Adds a title on top of the plot. 
+Adds title on top of the plot. 
 Title adjusts window size, top and bottom margins, centres coordinates automatically.
 
 Accessible from Side Menu -> General Styles -> Title
@@ -335,7 +335,7 @@ Accessible from Side Menu -> General Styles -> Title
 
   /*--------------------------- Footnote ---------------------------*/
  /*
- Adds a Footnote on the bottom of the plot. 
+ Adds Footnote on the bottom of the plot. 
  Footnote automatically adjusts window size, bottom margin.
 
  Accessible from Side Menu -> General Styles -> Footnote
@@ -403,7 +403,7 @@ Accessible from Side Menu -> General Styles -> Title
   
 
 /*--------------------------- Legend ---------------------------*/
-// Draws a node-color legend in the bottom right corner of the sankey plot
+// Draws node-color legend in the bottom right corner of the sankey plot
 // Accessible from: side menu -> nodes -> color group nodes -> add legend -> side menu -> graph styles
 
   
@@ -446,7 +446,7 @@ Accessible from Side Menu -> General Styles -> Title
     });
  
  
- 
+    
     unique_nodes = [...new Set(unique_nodes)];
     unique_colors = [...new Set(unique_colors)];
     let larg_width = 0;
@@ -521,7 +521,7 @@ Accessible from Side Menu -> General Styles -> Title
     /* Measure the height and width of the legend */
 let legendWidth = legendBBox.width;
  
-/* Append a rectangle behind the legend to contain it */
+/* Append rectangle behind the legend to contain it */
 legend.insert('rect', ':first-child')
   .attr('x', legendBBox.x - 10)  // Add padding
   .attr('y', legendBBox.y - 10)  // Add padding
@@ -544,14 +544,17 @@ console.log('legendHeight:', legendHeight);
   
   
   /*--------------------------- Tooltip ---------------------------*/
+  //Shows the number of people in the link(path), or node that mouse pointer is hovering over in the sankey diagram
   
   
-  
-  
+  //no idea why it's here, dont delete because something might break
   d3.selectAll('title').remove();
   
   
   
+  //this is hint that shows up when you hover your mouse pointer over link
+  //it is set up in the node labels hide section below
+  //settings below are quite intuitive
   let tip1 = d3.tip()
     .attr('class', 'd3-tip')
     .style('background', 'rgba(0, 0, 0, 0.8)')
@@ -568,6 +571,9 @@ console.log('legendHeight:', legendHeight);
   
   
     
+  //this is hint that shows up when you hover your mouse pointer over node
+  //it is set up in the node labels hide section below
+  //settings below are quite intuitive
   let tip2 = d3.tip()
     .attr('class', 'd3-tip')
     .style('background', 'rgba(0, 0, 0, 0.8)')
@@ -582,10 +588,13 @@ console.log('legendHeight:', legendHeight);
       return d.name + '<br><strong>' + d.value + '</strong> people in this node!';
     });
   
+  
     
-    
+  //probably activates the tips? not sure.  
   svg.call(tip1);
   svg.call(tip2);
+
+
 
   link.style('stroke-opacity', 0.901);
   
@@ -594,28 +603,35 @@ console.log('legendHeight:', legendHeight);
 
  
   /*--------------------------- Link Text button ---------------------------*/
+  // Shows label sizes
+  // Accessible from: side menu -> links tab -> Show Label sizes ON
+  
 
 
-
-
-  let linkText = svg.append('g');
-  let data = link.data();
+  
+  let linkText = svg.append('g');//append link text into the plot
+  let data = link.data();//get link data
   let linkLength = data.length;
   let linkShow = false;
   let clicks = 0;
   
   
   
+  //link_show is switch Show Label sizes
+  //link_show is located in links_item.R in the ui folder
+  // to access: look up materialSwitch('lin in links_item
   d3.select('label[for=\"link_show\"]')
-    .on('click', d => {
+    .on('click', d => {//if the link show switch is CLICKED(not triggered), activate
       linkShow = !linkShow;
       clicks = clicks + 1;
       if (clicks == 1){
         
-        for (let x = 0; x < linkLength; x++){
+        for (let x = 0; x < linkLength; x++){// go through all links. x is link number in this case
           
-          let d = data[x];
-          linkText
+          let d = data[x];//extract |ink
+          
+          
+          linkText//position the text and set the formats. settings are intuitive and adjustable.
             .append('text')
             .attr('class', 'linkText')
             .attr('x', -50 + d.source.x + (d.target.x - d.source.x) / 2)
@@ -633,11 +649,11 @@ console.log('legendHeight:', legendHeight);
       if (linkShow){
         
         d3.selectAll('.linkText')
-          .attr('opacity', 1)
+          .attr('opacity', 1)// if switch is on, make text visible
       } else {
         
         d3.selectAll('.linkText')
-          .attr('opacity', 0)
+          .attr('opacity', 0)//otherwise make text transparent
       }
     })
 
@@ -649,44 +665,45 @@ console.log('legendHeight:', legendHeight);
   //Hides all the text from the nodes.
   
   
-  
+  // Accessed from sankey_function.R:
+  // look up str_replace('nodeHide in sankey function.R to access
   let nodeHide = false;
+  
+  
+  
+  //if nodeHide is on, make text transparent
   if (nodeHide){
+    
     node
       .select('text')
       .style('opacity', 0);
   } else {
+    //otherwise, make text visible
     node
       .select('text')
       .style('opacity', 1);
   }
     
 
-
-
+  //when mouse pointer hovers over link, make link slightly more transparent and show tip 1(from the above tooltip part)
   link
     .on('mouseover', function(d){
       tip1.show(d)
         .style('pointer-events', 'none')
         .style('opacity', 0.9);
-
-      
-        
-
-      //c
-      
     })
     .on('mouseout',function(d){
       tip1.hide(d);
-      
-      //d
+      // if mouse pointer is no longer on link, hide tip 1
     })
     
+    
+    //not sure what this is for
   let fill;
-  
   let units = 1;
-  //a
-  
+
+
+  //when mouse pointer hovers over node, make node slightly more transparent and show tip 2(from the above tooltip part)
   node
     .on('mouseover', function(d){
       tip2.style('opacity', 0.9)
@@ -696,86 +713,102 @@ console.log('legendHeight:', legendHeight);
       fill = d3.select(this)
                   .select('rect')
                   .style('fill');
-
-      //b
-
-      //e
-
     })
     .on('mouseout',function(d){
       tip2.hide(d);
-
-      //b2
-      
-      
-                  
-      //f
-      
+      // if mouse pointer is no longer on node, hide tip 2
     })
 
 
 
 
+    
+    /*----- Drag Nodes -----*/
   
-    /*--------------------------- PowerBI click action ---------------------------*/
-
   
     node
       .select('rect')
       .style("cursor", "pointer");
-    node
-    .on("mousedown.drag", null);
+      
+      
+      
+    node.on("mousedown.drag", null);
+    //Comment the line above to make nodes moveable. 
+    //mousedown.drag is set to null by default, because when this feature is on it breaks color grouping and other things.
 
+
+
+
+
+    /*--------------------------- PowerBI click action ---------------------------*/
+    //When you click on the node, highlights it and links that are connected to it. 
+    
+    
     let node_op;
-    let powerBI = true;
+    let powerBI = true;//supposed to be switcheable? on by default.
+    
+    
+    
     if (powerBI === true){
+      
       node
-        .on("click", function(d,i){
+        .on("click", function(d,i){//after we click on the node->
           node_op = d3.select(this)
             .select('rect')
-            .style('opacity');
-          node_op = parseFloat(node_op);
+            .style('opacity');//->choose it's transparency to adjust later via node_op
+            
+            
+          node_op = parseFloat(node_op);//extract the opacity of nodes
           allnodes_op = Math.min(parseFloat(node.nodes()[0].firstChild.style.opacity), 
-                                parseFloat(node.nodes()[1].firstChild.style.opacity));
+                                parseFloat(node.nodes()[1].firstChild.style.opacity));// find the minimum opacity of all nodes?
 
           
 
-          if ((node_op === 0.9 && allnodes_op === 0.9) || (node_op === 0.5)){
+          if ((node_op === 0.9 && allnodes_op === 0.9) || (node_op === 0.5)){// special case?
+          
             node
               .select('rect')
               .style('opacity', '0.5')
 
 
+
             if (node.select('text').style('opacity') !== '0'){
+              
               node
                 .select('text')
                 .style('opacity', '0.5')
 
+
               d3.select(this)
                 .select('text')
                 .style('opacity', '1')
-            }
+            }//adjusts node text opacity for better visibility?
+
 
 
             d3.select(this)
               .select('rect')
-              .style('opacity', '0.9')
+              .style('opacity', '0.9')// adjust node's opacity?
 
             
 
             let i2 = 0;
-            link.each(d2 => {
+            link.each(d2 => {//adjust opacities of links corresponding to the chosen node?
               if (d2.source === d || d2.target == d){
+                
                 link.nodes()[i2].style.strokeOpacity = '0.5';
                 link.nodes()[i2].style.opacity = '';
               } else {
+                
                 link.nodes()[i2].style.opacity = '0.3';
               }
+              
               i2 = i2+1;
             })
 
 
           } else if (node_op === 0.9 && allnodes_op === 0.5){
+            
             node
               .select('rect')
               .style('opacity', '0.9')
@@ -784,7 +817,7 @@ console.log('legendHeight:', legendHeight);
               node
                 .select('text')
                 .style('opacity', '1')
-            }
+            }//not sure what this does, too scared to delete, too late to test.
 
             
 
@@ -855,7 +888,7 @@ console.log('legendHeight:', legendHeight);
               })
 
             } else {
-              alert("Not a correct link grouping format.");
+              alert("Not correct link grouping format.");
             }
            
           } else {
